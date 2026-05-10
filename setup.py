@@ -29,6 +29,7 @@ CLASSIFIERS = [
     "Programming Language :: Python :: 3",
 ]
 INSTALL_REQUIRES = [
+    "setuptools>=68",
     "numpy",
     "scipy",
     "brokenaxes",

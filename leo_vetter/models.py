@@ -1,5 +1,27 @@
 import numpy as np
-import batman
+import sys
+import types
+
+try:
+    import batman
+except ModuleNotFoundError as exc:
+    if exc.name != "distutils":
+        raise
+    # Python 3.12+ removed distutils; batman still imports distutils.ccompiler.
+    try:
+        import setuptools._distutils.ccompiler as _distutils_ccompiler
+    except ModuleNotFoundError as setuptools_exc:
+        raise ModuleNotFoundError(
+            "setuptools is required on Python 3.12+ to provide distutils "
+            "compatibility for batman-package"
+        ) from setuptools_exc
+
+    distutils_module = types.ModuleType("distutils")
+    distutils_module.ccompiler = _distutils_ccompiler
+    sys.modules.setdefault("distutils", distutils_module)
+    sys.modules.setdefault("distutils.ccompiler", _distutils_ccompiler)
+
+    import batman
 
 from lmfit import Parameters
 from leo_vetter.utils import phasefold
